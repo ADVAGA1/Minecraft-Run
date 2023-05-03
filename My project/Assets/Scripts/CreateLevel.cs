@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,6 +6,7 @@ using UnityEngine;
 public class CreateLevel : MonoBehaviour
 {
     public GameObject groundPrefab;
+    public float scale;
 
     // Start is called before the first frame update
     void Start()
@@ -13,23 +15,25 @@ public class CreateLevel : MonoBehaviour
         bool left = false;
         uint height = 0;
         uint width = 0;
-        uint scale = 1;
 
-        for(uint i = 0; i<2; ++i){
+        for(uint i = 0; i<15; ++i){
 
             obj = (GameObject)Instantiate(groundPrefab);
 
             obj.transform.localScale *= scale;
-            if(left) obj.transform.Rotate(0.0f,90.0f,0.0f);
-            obj.transform.Translate(0.0f,0.0f,0.0f);
+            obj.transform.Translate(width*scale, 0.0f, height*scale);
+            if (left)
+            {
+                obj.transform.Translate(2*scale, 0, -2 * scale);
+                obj.transform.Rotate(0.0f, 90.0f, 0.0f);
+            }
 
             obj.transform.parent = transform;
 
-            if(left) width += 5;
-            else height += 5;
+            if(left) width += 6;
+            else height += 6;
 
             left = !left;
-
         }
     }
 }
