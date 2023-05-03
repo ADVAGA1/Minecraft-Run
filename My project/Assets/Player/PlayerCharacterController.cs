@@ -23,7 +23,7 @@ public class PlayerCharacterController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        /*
         transform.forward = new Vector3(horizontalInput, 0, Mathf.Abs(horizontalInput) - 1);
 
         ground = Physics.CheckSphere(transform.position, 0.1f, groundLayers, QueryTriggerInteraction.Ignore); 
@@ -62,6 +62,6 @@ public class PlayerCharacterController : MonoBehaviour
 
 
         characterController.Move(velocity * Time.deltaTime);
-      
+      */
     }
 }
