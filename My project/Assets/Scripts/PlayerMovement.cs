@@ -3,6 +3,11 @@ using System.Collections.Generic;
 using System.Net.Sockets;
 using UnityEngine;
 
+enum Moviment
+{
+    FORWARD, LEFT
+}
+
 public class PlayerMovement : MonoBehaviour
 {
     public float velocity;
@@ -10,6 +15,7 @@ public class PlayerMovement : MonoBehaviour
     public Rigidbody myRigidbody;
     private bool left, changed;
     private int jumpCounter;
+    private Moviment currentMov;
 
     private float offsetx, offsetz;
 
@@ -19,6 +25,8 @@ public class PlayerMovement : MonoBehaviour
         left = false;
         changed = false;
         jumpCounter = 0;
+        offsetx = 0; offsetz = 0;
+        currentMov = Moviment.FORWARD;
     }
 
     // Update is called once per frame
@@ -27,18 +35,23 @@ public class PlayerMovement : MonoBehaviour
 
         bool ray = Physics.Raycast(transform.position, Vector3.down, out RaycastHit hitInfo);
 
+        if (ray)
+        {
+            offsetx = hitInfo.collider.transform.position.x - transform.position.x;
+            offsetz = hitInfo.collider.transform.position.z - transform.position.z;
+        }
+        else
+        {
+            offsetx = 0; offsetz=0;
+        }
+
+
         if (ray && !changed && hitInfo.collider.name == "Change")
         {
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
+            if (jumpCounter < 1 && Input.GetKeyDown(KeyCode.Space))
+            {   
                 left = !left;
                 changed = true;
-                
-                offsetx = hitInfo.collider.transform.position.x - transform.position.x;
-                offsetz = hitInfo.collider.transform.position.z - transform.position.z;
-
-                transform.position += new Vector3(offsetx, 0, offsetz);
-
             }
         }
         else
@@ -50,8 +63,24 @@ public class PlayerMovement : MonoBehaviour
             }
         }
 
-        if (left) transform.position += new Vector3(Time.deltaTime, 0, 0) * velocity;
-        else transform.position +=  new Vector3(0, 0, Time.deltaTime) * velocity;
+        if (left)
+        {
+            if (currentMov != Moviment.LEFT)
+            {
+                currentMov = Moviment.LEFT;
+                transform.Rotate(0, 90, 0);
+            }
+            transform.position += new Vector3(Time.deltaTime, 0, offsetz / 500.0f) * velocity;
+        }
+        else
+        {
+            if (currentMov != Moviment.FORWARD)
+            {
+                currentMov = Moviment.FORWARD;
+                transform.Rotate(0, -90, 0);
+            }
+            transform.position += new Vector3(offsetx / 500.0f, 0, Time.deltaTime) * velocity;
+        }
 
         if (ray && hitInfo.collider.name != "Change") changed = false;
 

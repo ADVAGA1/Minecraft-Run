@@ -24,14 +24,14 @@ public class CreateLevel : MonoBehaviour
             obj.transform.Translate(width*scale, 0.0f, height*scale);
             if (left)
             {
-                obj.transform.Translate(2*scale, 0, -2 * scale);
+                obj.transform.Translate(3.2f*scale, 0, -3.2f * scale);
                 obj.transform.Rotate(0.0f, 90.0f, 0.0f);
             }
 
             obj.transform.parent = transform;
 
-            if(left) width += 6;
-            else height += 6;
+            if(left) width += 16;
+            else height += 16;
 
             left = !left;
         }
