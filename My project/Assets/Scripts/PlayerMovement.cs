@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Net.Sockets;
 using UnityEngine;
 
-enum Moviment
+public enum Moviment
 {
     FORWARD, LEFT
 }
@@ -13,17 +13,21 @@ public class PlayerMovement : MonoBehaviour
     public float velocity;
     public float jumpingForce;
     public Rigidbody myRigidbody;
+    private Animator myAnimator;
     private bool left, changed;
     private int jumpCounter;
-    private Moviment currentMov;
+    private bool onFloor;
+    public Moviment currentMov { get; private set; }
 
     private float offsetx, offsetz;
 
     // Start is called before the first frame update
     void Start()
     {
+        myAnimator = transform.GetChild(0).GetComponent<Animator>();
         left = false;
         changed = false;
+        onFloor = true;
         jumpCounter = 0;
         offsetx = 0; offsetz = 0;
         currentMov = Moviment.FORWARD;
@@ -45,22 +49,77 @@ public class PlayerMovement : MonoBehaviour
             offsetx = 0; offsetz=0;
         }
 
+        if (ray)
+        {
+            
+            string name = hitInfo.collider.name;
 
-        if (ray && !changed && hitInfo.collider.name == "Change")
-        {
-            if (jumpCounter < 1 && Input.GetKeyDown(KeyCode.Space))
-            {   
-                left = !left;
-                changed = true;
-            }
-        }
-        else
-        {
-            if (jumpCounter < 2 && Input.GetKeyDown(KeyCode.Space))
+            if(!changed && name == "Change")
             {
-                myRigidbody.velocity = Vector3.up * jumpingForce;
-                ++jumpCounter;
+                if(Input.GetKeyDown(KeyCode.Space)) 
+                {
+                    left = !left;
+                    changed = true;
+                }
             }
+            else
+            {
+                if (jumpCounter < 2 && Input.GetKeyDown(KeyCode.Space))
+                {
+                    if (jumpCounter < 1) myRigidbody.velocity = Vector3.up * jumpingForce;
+                    else myRigidbody.velocity = Vector3.up * jumpingForce *0.75f;
+                    jumpCounter++;
+                    myAnimator.SetInteger("jumpCounter", jumpCounter);
+                    onFloor = false;
+                }
+            }
+
+            if(onFloor && name == "pincho")
+            {
+                if (left) myRigidbody.velocity = new Vector3(0, 4, -4);
+                else myRigidbody.velocity = new Vector3(-4, 4, 0);
+            }
+
+            if (onFloor && name == "fango")
+            {
+                velocity = 2.5f * 0.5f;
+            }
+            else velocity = 2.5f;
+
+
+            /*
+            if (!changed && hitInfo.collider.name == "Change")
+            {
+                velocity = 2.5f;
+                if (jumpCounter < 1 && Input.GetKeyDown(KeyCode.Space))
+                {
+                    left = !left;
+                    changed = true;
+                }
+            }
+            else if (onFloor && hitInfo.collider.name == "pincho")
+            {
+                velocity = 2.5f;
+                if (left) myRigidbody.velocity = new Vector3(0, 5, -2);
+                else myRigidbody.velocity = new Vector3(-2, 5, 0);
+            }
+            else if(onFloor && hitInfo.collider.name == "fango")
+            {
+                velocity = 2.5f * 0.50f;
+            }
+            else
+            {
+                velocity = 2.5f;
+                if (jumpCounter < 2 && Input.GetKeyDown(KeyCode.Space))
+                {
+                    if (jumpCounter < 1) myRigidbody.velocity = Vector3.up * jumpingForce;
+                    else myRigidbody.velocity = Vector3.up * jumpingForce / 2;
+                    jumpCounter++;
+                    myAnimator.SetInteger("jumpCounter", jumpCounter);
+                    onFloor = false;
+                }
+            }
+            */
         }
 
         if (left)
@@ -70,7 +129,7 @@ public class PlayerMovement : MonoBehaviour
                 currentMov = Moviment.LEFT;
                 transform.Rotate(0, 90, 0);
             }
-            transform.position += new Vector3(Time.deltaTime, 0, offsetz / 500.0f) * velocity;
+            transform.position += new Vector3(Time.deltaTime, 0, offsetz / 100.0f) * velocity;
         }
         else
         {
@@ -79,7 +138,7 @@ public class PlayerMovement : MonoBehaviour
                 currentMov = Moviment.FORWARD;
                 transform.Rotate(0, -90, 0);
             }
-            transform.position += new Vector3(offsetx / 500.0f, 0, Time.deltaTime) * velocity;
+            transform.position += new Vector3(offsetx / 100.0f, 0, Time.deltaTime) * velocity;
         }
 
         if (ray && hitInfo.collider.name != "Change") changed = false;
@@ -87,7 +146,9 @@ public class PlayerMovement : MonoBehaviour
     }
 
     private void OnCollisionEnter(Collision collision)
-    {
+    { 
         jumpCounter = 0;
+        myAnimator.SetInteger("jumpCounter", jumpCounter);
+        onFloor = true;
     }
 }

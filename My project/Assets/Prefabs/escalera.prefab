@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7147314399380738322}
   - component: {fileID: 5914887351082726790}
   m_Layer: 0
-  m_Name: default
+  m_Name: escalera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

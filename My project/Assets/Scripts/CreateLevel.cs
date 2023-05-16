@@ -1,12 +1,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
 public class CreateLevel : MonoBehaviour
 {
-    public GameObject fivePlatforms;
-    public GameObject fourPlatforms;
-    public GameObject threePlatforms;
-    public GameObject sixPlatforms;
+    public List<GameObject> threePlatforms;
+    public List<GameObject> fourPlatforms;
+    public List<GameObject> fivePlatforms;
+    public List<GameObject> sixPlatforms;
     public GameObject stairs;
     public float scale;
 
@@ -20,10 +21,21 @@ public class CreateLevel : MonoBehaviour
         float depth = 0;
         int nPlatforms;
 
-        List<GameObject> platforms = new List<GameObject>() {threePlatforms,fourPlatforms,fivePlatforms, sixPlatforms};
+        obj = Instantiate(sixPlatforms[0]);
+        obj.transform.localScale *= scale;
+        obj.transform.Translate(width * scale, -depth * scale, height * scale);
+        obj.transform.parent = transform;
+        height += 3.2f * 6;
+        left = !left;
 
-        for (uint i = 0; i < 15; ++i)
+        for (uint i = 0; i < 30; ++i)
         {
+
+            int nThreePlatforms = Random.Range(0, threePlatforms.Count);
+            int nFourPlatforms = Random.Range(0, fourPlatforms.Count);
+            int nFivePlatforms = Random.Range(0, fivePlatforms.Count);
+            int nSixPlatforms = Random.Range(0, sixPlatforms.Count);
+            List<GameObject> platforms = new List<GameObject>() { threePlatforms[nThreePlatforms], fourPlatforms[nFourPlatforms], fivePlatforms[nFivePlatforms], sixPlatforms[nSixPlatforms] };
 
             nPlatforms = Random.Range(3, 7);
 

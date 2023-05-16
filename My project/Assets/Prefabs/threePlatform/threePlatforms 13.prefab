@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3201505916335485147}
   m_Layer: 0
-  m_Name: threePlatforms
+  m_Name: threePlatforms 13
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -30,7 +30,7 @@ Transform:
   m_Children:
   - {fileID: 2456618960684443694}
   - {fileID: 8913167835146123959}
-  - {fileID: 7756157783981263669}
+  - {fileID: 8087627383997856838}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -114,7 +114,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 3.2, y: 3.2, z: 3.2}
   m_Center: {x: 0, y: 1.6, z: 0}
---- !u!1001 &7848168782991675927
+--- !u!1001 &8607546317687432548
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -171,10 +171,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3e1c9412489dab64e86086531a71504e, type: 3}
---- !u!4 &7756157783981263669 stripped
+--- !u!4 &8087627383997856838 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 524989881937746210, guid: 3e1c9412489dab64e86086531a71504e, type: 3}
-  m_PrefabInstance: {fileID: 7848168782991675927}
+  m_PrefabInstance: {fileID: 8607546317687432548}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &9005173301802214293
 PrefabInstance:

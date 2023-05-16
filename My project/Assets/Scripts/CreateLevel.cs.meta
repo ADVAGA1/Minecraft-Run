@@ -3,7 +3,12 @@ guid: a98e7b6214bca2b438fc2b541e6bffa6
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - fivePlatforms: {instanceID: 0}
+  - fourPlatforms: {instanceID: 0}
+  - threePlatforms: {instanceID: 0}
+  - sixPlatforms: {instanceID: 0}
+  - stairs: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
