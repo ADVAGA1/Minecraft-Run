@@ -1,9 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Net.Sockets;
 using UnityEngine;
 
-public enum Moviment
+public enum Movement
 {
     FORWARD, LEFT
 }
@@ -17,7 +14,7 @@ public class PlayerMovement : MonoBehaviour
     private bool left, changed;
     private int jumpCounter;
     private bool onFloor;
-    public Moviment currentMov { get; private set; }
+    public Movement currentMov { get; private set; }
 
     private float offsetx, offsetz;
 
@@ -30,7 +27,7 @@ public class PlayerMovement : MonoBehaviour
         onFloor = true;
         jumpCounter = 0;
         offsetx = 0; offsetz = 0;
-        currentMov = Moviment.FORWARD;
+        currentMov = Movement.FORWARD;
     }
 
     // Update is called once per frame
@@ -86,56 +83,22 @@ public class PlayerMovement : MonoBehaviour
             }
             else velocity = 2.5f;
 
-
-            /*
-            if (!changed && hitInfo.collider.name == "Change")
-            {
-                velocity = 2.5f;
-                if (jumpCounter < 1 && Input.GetKeyDown(KeyCode.Space))
-                {
-                    left = !left;
-                    changed = true;
-                }
-            }
-            else if (onFloor && hitInfo.collider.name == "pincho")
-            {
-                velocity = 2.5f;
-                if (left) myRigidbody.velocity = new Vector3(0, 5, -2);
-                else myRigidbody.velocity = new Vector3(-2, 5, 0);
-            }
-            else if(onFloor && hitInfo.collider.name == "fango")
-            {
-                velocity = 2.5f * 0.50f;
-            }
-            else
-            {
-                velocity = 2.5f;
-                if (jumpCounter < 2 && Input.GetKeyDown(KeyCode.Space))
-                {
-                    if (jumpCounter < 1) myRigidbody.velocity = Vector3.up * jumpingForce;
-                    else myRigidbody.velocity = Vector3.up * jumpingForce / 2;
-                    jumpCounter++;
-                    myAnimator.SetInteger("jumpCounter", jumpCounter);
-                    onFloor = false;
-                }
-            }
-            */
         }
 
         if (left)
         {
-            if (currentMov != Moviment.LEFT)
+            if (currentMov != Movement.LEFT)
             {
-                currentMov = Moviment.LEFT;
+                currentMov = Movement.LEFT;
                 transform.Rotate(0, 90, 0);
             }
             transform.position += new Vector3(Time.deltaTime, 0, offsetz / 100.0f) * velocity;
         }
         else
         {
-            if (currentMov != Moviment.FORWARD)
+            if (currentMov != Movement.FORWARD)
             {
-                currentMov = Moviment.FORWARD;
+                currentMov = Movement.FORWARD;
                 transform.Rotate(0, -90, 0);
             }
             transform.position += new Vector3(offsetx / 100.0f, 0, Time.deltaTime) * velocity;

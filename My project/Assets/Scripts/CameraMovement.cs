@@ -64,8 +64,16 @@ public class CameraMovement : MonoBehaviour
         var currentRotation = transform.rotation;
         transform.rotation = Quaternion.identity;
 
-        transform.Translate(move * Time.deltaTime * velocity);
+        if(!Shaking(move, mid)) transform.Translate(move * Time.deltaTime * velocity);
 
         transform.rotation = currentRotation;
     }
+
+    private bool Shaking(Vector3 move, Vector3 end) 
+    {
+        Vector3 nextPosition = transform.position + move * Time.deltaTime * velocity;
+        if (nextPosition.x > end.x && nextPosition.y > end.y && nextPosition.z > end.z) return false;
+        return true;
+    }
+
 }
