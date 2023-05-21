@@ -26,14 +26,18 @@ public class CameraMovement : MonoBehaviour
 
         if (ray)
         {
-            if (hitInfo.collider.name != "escalera(Clone)")
+            if (hitInfo.collider.name == "escalera(Clone)")
+            {
+                int i = hitInfo.collider.transform.GetSiblingIndex();
+                origin = hitInfo.collider.transform.parent.GetChild(i + 1).GetChild(0);
+            }
+            else if(hitInfo.collider.name == "diamante(Clone)")
             {
                 origin = hitInfo.collider.transform.parent.GetChild(0);
             }
             else
             {
-                int i = hitInfo.collider.transform.GetSiblingIndex();
-                origin = hitInfo.collider.transform.parent.GetChild(i + 1).GetChild(0);
+                origin = hitInfo.collider.transform.parent.GetChild(0);
             }
 
             int j = origin.parent.GetSiblingIndex();
@@ -64,7 +68,8 @@ public class CameraMovement : MonoBehaviour
         var currentRotation = transform.rotation;
         transform.rotation = Quaternion.identity;
 
-        if(!Shaking(move, mid)) transform.Translate(move * Time.deltaTime * velocity);
+        // if(!Shaking(move, mid)) 
+        transform.Translate(move * Time.deltaTime * velocity);
 
         transform.rotation = currentRotation;
     }

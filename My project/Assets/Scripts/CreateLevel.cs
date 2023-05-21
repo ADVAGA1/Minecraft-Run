@@ -9,6 +9,7 @@ public class CreateLevel : MonoBehaviour
     public List<GameObject> fivePlatforms;
     public List<GameObject> sixPlatforms;
     public GameObject stairs;
+    public GameObject diamonds;
     public float scale;
 
     // Start is called before the first frame update
@@ -54,7 +55,22 @@ public class CreateLevel : MonoBehaviour
             if (left) width += 3.2f * nPlatforms;
             else height += 3.2f * nPlatforms;
 
-            if (i < 14 && Random.value >= 0.5) 
+            //Diamond spawn
+            if (Random.value >= 0.8)
+            {
+                GameObject diamond = Instantiate(diamonds);
+
+                DiamanteScript diamanteScript = diamond.GetComponent<DiamanteScript>();
+
+                diamond.transform.parent = obj.transform;
+                diamond.transform.position = obj.transform.GetChild(0).position;
+                diamond.transform.Translate(0, diamanteScript.animationAmplitude + 3.2f * scale, 0);
+
+            }
+
+
+            //Stair spawn
+            if (i < 14 && Random.value >= 0.6) 
             {
                 GameObject stair = Instantiate(stairs);
                 

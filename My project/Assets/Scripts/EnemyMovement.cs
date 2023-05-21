@@ -24,11 +24,6 @@ public class EnemyMovement : MonoBehaviour
         if (ray)
         {
 
-            Vector3 nextBlock = transform.position;
-
-            if (left) nextBlock.x += 0.4f;
-            else nextBlock.z += 0.4f;
-
             if(!changed && hitInfo.collider.name == "Change" && InCenter(hitInfo.collider.transform))
             {
                 left = !left;
@@ -38,7 +33,11 @@ public class EnemyMovement : MonoBehaviour
                 transform.position = new Vector3(transform.position.x, yEnemy, transform.position.z);
             }
 
-            if(hitInfo.collider.name != "Change" && !Physics.Raycast(nextBlock, Vector3.down))
+            Vector3 nextBlock = transform.position;
+            if (left) nextBlock.x += 0.4f;
+            else nextBlock.z += 0.4f;
+
+            if (!Physics.Raycast(nextBlock, Vector3.down))
             {
                 myRigidbody.velocity = Vector3.up * jumpingForce;
             } 
