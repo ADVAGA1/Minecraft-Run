@@ -57,7 +57,7 @@ public class SilverfishScript : MonoBehaviour
     {
         if(other.name == "Player")
         {
-            
+            FindObjectOfType<GameManager>().EndGame();
         }
     }
 }

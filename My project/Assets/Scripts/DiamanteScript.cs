@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SocialPlatforms.Impl;
 
 public class DiamanteScript : MonoBehaviour
 {
@@ -9,11 +10,13 @@ public class DiamanteScript : MonoBehaviour
     public float animationAmplitude;
     private float timer;
     private Vector3 initialPosition;
+    private Score score;
     // Start is called before the first frame update
     void Start()
     {
         timer = 0;
         initialPosition = transform.position;
+        score = FindObjectOfType<Score>();
     }
 
     // Update is called once per frame
@@ -38,6 +41,7 @@ public class DiamanteScript : MonoBehaviour
     {
         if(other.name == "Player")
         {
+            score.UpdateScore(score.GetScore() + 1);
             Destroy(gameObject);
         }
     }

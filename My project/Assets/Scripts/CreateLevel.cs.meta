@@ -9,7 +9,7 @@ MonoImporter:
   - threePlatforms: {instanceID: 0}
   - sixPlatforms: {instanceID: 0}
   - stairs: {instanceID: 0}
-  executionOrder: 0
+  executionOrder: 100
   icon: {instanceID: 0}
   userData: 
   assetBundleName: 
