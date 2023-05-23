@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+
 public enum Movement
 {
     FORWARD, LEFT
@@ -17,7 +18,7 @@ public class PlayerMovement : MonoBehaviour
     private bool left, changed;
     private int jumpCounter;
     private bool onFloor, startTimerPincho;
-    private float timerPincho;
+    private float timerPincho, fallTimer;
     private Score score;
     private GameManager gameManager;
     public Movement currentMov { get; private set; }
@@ -32,11 +33,12 @@ public class PlayerMovement : MonoBehaviour
         score = FindObjectOfType<Score>();
         left = changed = startTimerPincho = false;
         onFloor = isPlaying = true;
-        timerPincho = 0.1f;
+        timerPincho = Constants.PINCHO_TIMER;
         jumpCounter = 0;
         offsetx = offsetz = 0;
         currentMov = Movement.FORWARD;
         gameManager = FindObjectOfType<GameManager>();
+        fallTimer = Constants.FALL_TIMER;
     }
 
     // Update is called once per frame
@@ -44,12 +46,17 @@ public class PlayerMovement : MonoBehaviour
     {
         if (isPlaying)
         {
+
+            if (fallTimer <= 0)
+            {
+                gameManager.EndGame();
+                return;
+            }
+
             if (startTimerPincho) timerPincho -= Time.deltaTime;
 
             if (startTimerPincho && timerPincho <= 0)
             {
-                //if (left) myRigidbody.velocity = new Vector3(0, 4, -4);
-                //else myRigidbody.velocity = new Vector3(-4, 4, 0);
                 startTimerPincho = false;
                 jumpCounter = 2;
 
@@ -57,7 +64,9 @@ public class PlayerMovement : MonoBehaviour
 
             }
 
-            bool ray = Physics.Raycast(transform.position + new Vector3(0, 1, 0), Vector3.down, out RaycastHit hitInfo);
+            bool ray = Physics.Raycast(transform.position + new Vector3(0, 1f, 0), Vector3.down, out RaycastHit hitInfo);
+
+            if(!ray) fallTimer -= Time.deltaTime;
 
             if (ray)
             {
@@ -72,14 +81,17 @@ public class PlayerMovement : MonoBehaviour
             if (ray)
             {
 
+                fallTimer = Constants.FALL_TIMER;
+
                 string name = hitInfo.collider.name;
 
-                if (!changed && name == "Change")
+                if (!changed && onFloor && name == "Change")
                 {
                     if (Input.GetKeyDown(KeyCode.Space))
                     {
                         left = !left;
                         changed = true;
+                        FindObjectOfType<CreateLevel>().ChangeBlock(hitInfo.collider.transform);
                         score.UpdateScore(score.GetScore() + 1);
                     }
                 }
@@ -138,7 +150,11 @@ public class PlayerMovement : MonoBehaviour
                 transform.position += new Vector3(offsetx / 200.0f, 0, Time.deltaTime) * velocity;
             }
 
-            if (ray && hitInfo.collider.name != "Change") changed = false;
+            if (changed && ray && hitInfo.collider.name != "Change")
+            {
+                changed = false;
+            }
+
         }
 
     }
@@ -153,13 +169,13 @@ public class PlayerMovement : MonoBehaviour
 
         if (collision.collider.name == "fango")
         {
-            velocity = 2.5f * 0.66f;
-            myAnimator.speed = myAnimator.speed * 0.66f;
+            velocity = Constants.Speed * Constants.Slowdown;
+            myAnimator.speed = myAnimator.speed * Constants.Slowdown;
         }
         else
         {
             myAnimator.speed = 1;
-            velocity = 2.5f;
+            velocity = Constants.Speed;
         }
 
         jumpCounter = 0;
@@ -175,6 +191,6 @@ public class PlayerMovement : MonoBehaviour
 
         transform.Rotate(90, 0, 0);
 
-        FindAnyObjectByType<EndScript>().EndGame();
+        FindObjectOfType<EndScript>().EndGame();
     }
 }

@@ -1611,7 +1611,7 @@ Camera:
   m_GameObject: {fileID: 963194225}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 2
+  m_ClearFlags: 1
   m_BackGroundColor: {r: 0.2024742, g: 0.6603774, b: 0.22358371, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
@@ -1672,7 +1672,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49e40a145b0cd9c42b37dde940f913f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  velocity: 1.8
+  velocity: 1.7
   player: {fileID: 547199146}
   level: {fileID: 1018973484}
 --- !u!1 &971361731
@@ -1932,6 +1932,8 @@ MonoBehaviour:
   - {fileID: 373318291397385273, guid: a353302f3c7902c418db1e979f3d43d3, type: 3}
   stairs: {fileID: 5250237663209898938, guid: f736d1d7d985b8f4a92dc410bbc40193, type: 3}
   diamonds: {fileID: 5097537412575584811, guid: e536614f74044c449822612ffaefde75, type: 3}
+  suelo_change: {fileID: 8265294817445651301, guid: c387c684b74a4bf4eba6b43038e34905, type: 3}
+  trees: {fileID: 4502342839345858610, guid: 2f4d3e8b31cc00745b7d7821f8407823, type: 3}
   scale: 0.32
 --- !u!4 &1018973486
 Transform:
@@ -2636,8 +2638,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scoreText: {fileID: 808408955}
   highscoreText: {fileID: 409100839}
-  highscore: 0
-  score: 0
 --- !u!1 &1728705835
 GameObject:
   m_ObjectHideFlags: 0

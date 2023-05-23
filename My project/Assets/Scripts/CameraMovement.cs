@@ -14,8 +14,8 @@ public class CameraMovement : MonoBehaviour
     {
 
         offsetCamera = transform.position;
-        origin = level.transform.GetChild(0).GetChild(0);
-        end = level.transform.GetChild(1).GetChild(0);
+        origin = level.transform.GetChild(0).Find("Change");
+        end = level.transform.GetChild(1).Find("Change");
 
     }
 
@@ -31,11 +31,15 @@ public class CameraMovement : MonoBehaviour
                 if (hitInfo.collider.name == "escalera(Clone)")
                 {
                     int i = hitInfo.collider.transform.GetSiblingIndex();
-                    origin = hitInfo.collider.transform.parent.GetChild(i + 1).GetChild(0);
+                    origin = hitInfo.collider.transform.parent.GetChild(i + 1).Find("Change");
+                }
+                else if(hitInfo.collider.name == "Flecha(Clone)")
+                {
+                    origin = hitInfo.collider.transform.parent.parent.Find("Change");
                 }
                 else
                 {
-                    origin = hitInfo.collider.transform.parent.GetChild(0);
+                    origin = hitInfo.collider.transform.parent.transform.Find("Change");
                 }
 
                 int j = origin.parent.GetSiblingIndex();
@@ -47,12 +51,12 @@ public class CameraMovement : MonoBehaviour
 
                     if (next.name != "escalera(Clone)")
                     {
-                        end = next.GetChild(0);
+                        end = next.Find("Change");
                     }
                     else
                     {
                         int k = next.GetSiblingIndex();
-                        end = next.parent.GetChild(k + 1).GetChild(0);
+                        end = next.parent.GetChild(k + 1).Find("Change");
                     }
                 }
             }
