@@ -91,6 +91,7 @@ public class EnemyMovement : MonoBehaviour
         if(collision.collider.name == "Player")
         {
             moving = false;
+            FindObjectOfType<PlayerMovement>().EndGame();
             GetComponentInChildren<Animator>().SetBool("biting", true);
         }
     }
