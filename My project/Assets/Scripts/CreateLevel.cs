@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Data;
 using UnityEngine;
 
 [System.Serializable]
@@ -12,17 +13,23 @@ public class CreateLevel : MonoBehaviour
     public GameObject diamonds;
     public GameObject suelo_change;
     public GameObject trees;
+    public GameObject terrain;
+    public GameObject player;
+    public GameObject normalBlock;
     public float scale;
+
+    private float height, width, depth;
+    private int timesSpawned, terrainsSpawned, indexTerrain;
+    private bool left;
 
     // Start is called before the first frame update
     void Start()
     {
         GameObject obj;
-        bool left = false;
-        float height = 0;
-        float width = 0;
-        float depth = 0;
-        int nPlatforms;
+        left = false;
+        timesSpawned = 0;
+        indexTerrain = 0;
+        height = width = depth = 0;
 
         obj = Instantiate(sixPlatforms[0]);
         obj.transform.localScale *= scale;
@@ -30,6 +37,62 @@ public class CreateLevel : MonoBehaviour
         obj.transform.parent = transform;
         height += Constants.blockSize * 6;
         left = !left;
+
+        obj = Instantiate(terrain);
+        obj.transform.Translate(0, -175 - depth, 0);
+        obj.transform.name = "terrain" + indexTerrain.ToString();
+
+        SpawnMap();
+    }
+
+    private void Update()
+    {
+        Vector3 playerPos = player.transform.position;
+        Vector3 lastPlatform = transform.GetChild(transform.childCount - 1).position;
+        float dist = Vector3.Distance(playerPos, lastPlatform);
+
+        if(dist <= 10)
+        {
+            SpawnMap();
+            ++timesSpawned;
+        }
+
+        if(timesSpawned == 2)
+        {
+            GameObject obj = Instantiate(terrain);
+            obj.transform.position = player.transform.position;
+            obj.transform.Translate(0, -175 - depth, 0);
+            obj.transform.name = "terrain" + indexTerrain.ToString();
+            timesSpawned = 0;
+            ++terrainsSpawned;
+            ++indexTerrain;
+        }
+
+        if(terrainsSpawned == 2)
+        {
+            GameObject t = GameObject.Find("terrain" + (indexTerrain - 2).ToString());
+            Destroy(t);
+            terrainsSpawned = 0;
+        }
+
+    }
+
+    public void ChangeBlock(Transform block)
+    {
+        GameObject suelo = Instantiate(suelo_change);
+
+        suelo.transform.localScale *= scale;
+        suelo.transform.position = block.position;
+        suelo.transform.parent = block.parent;
+        block.transform.Translate(0, -0.01f, 0);
+        //block.gameObject.SetActive(false);
+        suelo.name = block.name;
+    }
+
+    private void SpawnMap()
+    {
+        GameObject obj;
+        int nPlatforms;
 
         for (uint i = 0; i < 30; ++i)
         {
@@ -72,21 +135,30 @@ public class CreateLevel : MonoBehaviour
 
 
             //Stair spawn
-            if (i < 14 && Random.value >= 0.6) 
+            if (i < 14 && Random.value >= 0.6)
             {
                 GameObject stair = Instantiate(stairs);
-                
+                GameObject block = Instantiate(normalBlock);
+
                 stair.transform.localScale *= scale;
-                stair.transform.Translate(width * scale, -depth * scale + Constants.blockSize / 2.0f *scale, height * scale);
+                stair.transform.Translate(width * scale, -depth * scale + Constants.blockSize / 2.0f * scale, height * scale);
                 stair.transform.Rotate(0.0f, 90.0f, 0.0f);
+
+                block.transform.localScale *= scale;
+                block.transform.Translate(width * scale, -depth * scale - Constants.blockSize * scale + Constants.blockSize / 2.0f * scale, height * scale);
+                block.transform.Rotate(0.0f, 90.0f, 0.0f);
 
                 if (!left)
                 {
-                    stair.transform.Translate(Constants.blockSize*scale, 0, Constants.blockSize * scale); 
+                    stair.transform.Translate(Constants.blockSize * scale, 0, Constants.blockSize * scale);
                     stair.transform.Rotate(0.0f, 90.0f, 0.0f);
+                    block.transform.Translate(Constants.blockSize * scale, 0, Constants.blockSize * scale);
+                    block.transform.Rotate(0.0f, 90.0f, 0.0f);
                 }
 
                 stair.transform.parent = transform;
+                block.transform.parent = stair.transform;
+                block.transform.name = "bloqueescalera";
 
                 depth += Constants.blockSize / 2.0f;
 
@@ -106,9 +178,9 @@ public class CreateLevel : MonoBehaviour
 
                 if (left)
                 {
-                    tree.transform.Translate(-Constants.blockSize * scale * (nPlatforms/2 - 1), -Constants.blockSize * 1.5f * scale, -Constants.blockSize * (nPlatforms/2 + 2)* scale);
+                    tree.transform.Translate(-Constants.blockSize * scale * (nPlatforms / 2 - 1), -Constants.blockSize * 1.5f * scale, -Constants.blockSize * (nPlatforms / 2 + 2) * scale);
                 }
-                else tree.transform.Translate(-Constants.blockSize * scale * (nPlatforms/2 + 2), -Constants.blockSize * 1.5f * scale, -Constants.blockSize * (nPlatforms / 2 - 1) * scale);
+                else tree.transform.Translate(-Constants.blockSize * scale * (nPlatforms / 2 + 2), -Constants.blockSize * 1.5f * scale, -Constants.blockSize * (nPlatforms / 2 - 1) * scale);
 
                 tree.transform.parent = obj.transform;
 
@@ -116,17 +188,6 @@ public class CreateLevel : MonoBehaviour
 
             left = !left;
         }
-    }
-
-    public void ChangeBlock(Transform block)
-    {
-        GameObject suelo = Instantiate(suelo_change);
-
-        suelo.transform.localScale *= scale;
-        suelo.transform.position = block.position;
-        suelo.transform.parent = block.parent;
-        block.gameObject.SetActive(false);
-        suelo.name = block.name;
     }
 
 }

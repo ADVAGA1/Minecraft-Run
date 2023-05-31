@@ -21,10 +21,11 @@ public class ArrowScript : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        bool godMode = FindObjectOfType<PlayerMovement>().godMode;
 
-        if (other.name == "Player")
+        if (!godMode && other.name == "Player")
         {
-            FindObjectOfType<GameManager>().EndGame();
+            FindObjectOfType<GameManager>().EndGame(Deaths.ARROW);
         }
 
         Destroy(gameObject);

@@ -55,9 +55,11 @@ public class SilverfishScript : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.name == "Player")
+        bool godMode = FindObjectOfType<PlayerMovement>().godMode;
+
+        if(!godMode && other.name == "Player")
         {
-            FindObjectOfType<GameManager>().EndGame();
+            FindObjectOfType<GameManager>().EndGame(Deaths.SILVERFISH);
         }
     }
 }

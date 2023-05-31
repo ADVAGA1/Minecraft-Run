@@ -9,6 +9,8 @@ public class CameraMovement : MonoBehaviour
     public GameObject level;
     private Vector3 offsetCamera;
     private Transform origin, end;
+    private float timer, initialVelocity;
+    private bool changed;
     // Start is called before the first frame update
     void Start()
     {
@@ -16,18 +18,38 @@ public class CameraMovement : MonoBehaviour
         offsetCamera = transform.position;
         origin = level.transform.GetChild(0).Find("Change");
         end = level.transform.GetChild(1).Find("Change");
+        timer = 60;
+        changed = false;
+        initialVelocity = velocity;
 
     }
 
     // Update is called once per frame
     void Update()
     {
+
+        if(timer <= 0)
+        {
+            changed = !changed;
+            if (changed)
+            {
+                timer = 10;
+                velocity = initialVelocity + 0.2f;
+            }
+            else
+            {
+                timer = 60;
+                velocity = initialVelocity;
+            }
+        }
+
         if (FindAnyObjectByType<PlayerMovement>().isPlaying)
         {
             bool ray = Physics.Raycast(player.transform.position + Vector3.up, Vector3.down, out RaycastHit hitInfo);
 
             if (ray)
             {
+
                 if (hitInfo.collider.name == "escalera(Clone)")
                 {
                     int i = hitInfo.collider.transform.GetSiblingIndex();
@@ -36,6 +58,11 @@ public class CameraMovement : MonoBehaviour
                 else if(hitInfo.collider.name == "Flecha(Clone)")
                 {
                     origin = hitInfo.collider.transform.parent.parent.Find("Change");
+                }
+                else if(hitInfo.collider.name == "bloqueescalera")
+                {
+                    int i = hitInfo.collider.transform.parent.GetSiblingIndex();
+                    origin = hitInfo.collider.transform.parent.parent.GetChild(i + 1).Find("Change");
                 }
                 else
                 {
@@ -72,6 +99,8 @@ public class CameraMovement : MonoBehaviour
         if(!Shaking(move, mid)) transform.Translate(move.normalized * Time.deltaTime * velocity);
 
         transform.rotation = currentRotation;
+
+        timer -= Time.deltaTime;
     }
 
     private bool Shaking(Vector3 move, Vector3 end) 

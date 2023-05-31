@@ -10,6 +10,8 @@ public class EnemyMovement : MonoBehaviour
     private Movement currentMovement;
     private Rigidbody myRigidbody;
     private bool moving;
+    private int jumpCounter;
+    private float jumpTimer;
     void Start()
     {
         left = false;
@@ -17,6 +19,7 @@ public class EnemyMovement : MonoBehaviour
         moving = true;
         currentMovement = Movement.FORWARD;
         myRigidbody = GetComponent<Rigidbody>();
+        jumpCounter = 0;
     }
 
     // Update is called once per frame
@@ -39,14 +42,24 @@ public class EnemyMovement : MonoBehaviour
                 }
 
                 Vector3 nextBlock = transform.position + Vector3.up;
-                if (left) nextBlock.x += 0.4f;
-                else nextBlock.z += 0.4f;
+                if (left) nextBlock.x += 0.5f;
+                else nextBlock.z += 0.5f;
 
-                if (!Physics.Raycast(nextBlock, Vector3.down))
+                if (!Physics.Raycast(nextBlock, Vector3.down) && jumpCounter == 0)
                 {
                     myRigidbody.velocity = Vector3.up * jumpingForce;
+                    ++jumpCounter;
+                    jumpTimer = 0.7f;
                 }
 
+            }
+            else
+            {
+                if(jumpCounter < 2 && jumpTimer <= 0)
+                {
+                    myRigidbody.velocity = Vector3.up * jumpingForce;
+                    ++jumpCounter;
+                }
             }
 
             if (left)
@@ -70,6 +83,8 @@ public class EnemyMovement : MonoBehaviour
 
             if (ray && hitInfo.collider.name != "Change") changed = false;
         }
+
+        jumpTimer -= Time.deltaTime;
     }
 
     private bool InCenter(Transform collider)
@@ -91,9 +106,18 @@ public class EnemyMovement : MonoBehaviour
         if(collision.collider.name == "Player")
         {
             moving = false;
-            FindObjectOfType<PlayerMovement>().EndGame();
+            PlayerMovement player = FindObjectOfType<PlayerMovement>();
+            if(player.isPlaying) player.EndGame(Deaths.ZOMBIE);
             GetComponentInChildren<Animator>().SetBool("biting", true);
         }
+
+        Physics.Raycast(transform.position + Vector3.up, Vector3.down, out RaycastHit hitInfo);
+
+        if (hitInfo.collider == collision.collider)
+        {
+            jumpCounter = 0;
+        }
+
     }
 
 }

@@ -12,32 +12,42 @@ public static class Constants
     public const float blockSize = 3.2f;
 }
 
+public enum Deaths
+{
+    FALL, PINCHO, ZOMBIE, ARROW, SILVERFISH
+}
+
 public class GameManager : MonoBehaviour
 {
     private bool gameEnded;
+    private bool gamePaused;
     // Start is called before the first frame update
     void Start()
     {
         gameEnded = false;
+        gamePaused = false;
     }
 
-    // Update is called once per frame
-    void Update()
+    public void PauseGame(bool pause)
     {
-        
+        gamePaused = pause;
+
+        if (gamePaused)
+        {
+            Time.timeScale = 0;
+        }
+        else
+        {
+            Time.timeScale = 1;
+        }
     }
 
-    public void PauseGame()
-    {
-        
-    }
-
-    public void EndGame()
+    public void EndGame(Deaths death)
     {
         if (!gameEnded)
         {
             Debug.Log("Game Over!");
-            FindObjectOfType<PlayerMovement>().EndGame();
+            FindObjectOfType<PlayerMovement>().EndGame(death);
             gameEnded = true;
         }
     }

@@ -38,7 +38,9 @@ public class PinchoScript : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if(collision.collider.name == "Player")
+        bool godMode = FindObjectOfType<PlayerMovement>().godMode;
+
+        if(!godMode && collision.collider.name == "Player")
         {
             startTimer = true;
         }
