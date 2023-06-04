@@ -9,6 +9,7 @@ public enum Movement
 
 public class PlayerMovement : MonoBehaviour
 {
+    public ParticleSystem polvo;
     public float velocity;
     public float jumpingForce;
     private Rigidbody myRigidbody;
@@ -26,6 +27,8 @@ public class PlayerMovement : MonoBehaviour
     public Movement currentMovement { get; private set; }
 
     private float offsetx, offsetz;
+
+    public GameObject diamante;
 
     bool first;
 
@@ -128,6 +131,24 @@ public class PlayerMovement : MonoBehaviour
         transform.Rotate(90, 0, 0);
 
         FindObjectOfType<EndScript>().EndGame(death);
+
+        System.Random r = new System.Random();
+        int value = r.Next(1, 5);
+        for(int i = 0; i < value; i++)
+        {
+            GameObject obj = Instantiate(diamante);
+            obj.transform.position = transform.position + Vector3.up;
+            obj.GetComponent<BoxCollider>().isTrigger = false;
+            obj.GetComponent<DiamanteScript>().enabled = false;
+            obj.AddComponent<Rigidbody>();
+            obj.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
+
+            int valuex = r.Next(-2, 2);
+            int valuez = r.Next(-2, 2);
+
+            obj.GetComponent<Rigidbody>().velocity = new Vector3(valuex,4,valuez);
+        }
+
     }
 
     private bool InCenter(Transform collider)
@@ -201,6 +222,7 @@ public class PlayerMovement : MonoBehaviour
                         FindObjectOfType<CreateLevel>().ChangeBlock(hitInfo.collider.transform);
                         score.UpdateScore(score.GetScore() + 1);
                         FindObjectOfType<AudioManager>().Play("change");
+                        CreateDust();
                     }
                 }
                 else
@@ -208,7 +230,11 @@ public class PlayerMovement : MonoBehaviour
                     if (jumpCounter < 2 && Input.GetKeyDown(KeyCode.Space))
                     {
 
-                        if (jumpCounter < 1) myRigidbody.velocity = Vector3.up * jumpingForce;
+                        if (jumpCounter < 1)
+                        {
+                            myRigidbody.velocity = Vector3.up * jumpingForce;
+                            CreateDust();
+                        }
                         else myRigidbody.velocity = Vector3.up * jumpingForce * 0.75f;
 
                         jumpCounter++;
@@ -287,6 +313,7 @@ public class PlayerMovement : MonoBehaviour
                 FindObjectOfType<CreateLevel>().ChangeBlock(hitInfo.collider.transform);
                 score.UpdateScore(score.GetScore() + 1);
                 FindObjectOfType<AudioManager>().Play("change");
+                CreateDust();
 
             }
 
@@ -306,6 +333,7 @@ public class PlayerMovement : MonoBehaviour
                 onFloor = false;
                 myAnimator.SetBool("onFloor", onFloor);
                 FindObjectOfType<AudioManager>().Play("jump");
+                CreateDust();
 
             }
 
@@ -347,5 +375,10 @@ public class PlayerMovement : MonoBehaviour
         if (ray && hitInfo.collider.name != "Change") changed = false;
 
         jumpTimer -= Time.deltaTime;
+    }
+
+    void CreateDust()
+    {
+        polvo.Play();
     }
 }

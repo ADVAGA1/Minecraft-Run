@@ -11,7 +11,8 @@ public class EnemyMovement : MonoBehaviour
     private Rigidbody myRigidbody;
     private bool moving, eatingSound;
     private int jumpCounter;
-    private float jumpTimer, soundTimer;
+    private float jumpTimer, soundTimer, bloodTimer;
+    public ParticleSystem blood;
     void Start()
     {
         left = false;
@@ -103,11 +104,19 @@ public class EnemyMovement : MonoBehaviour
                 FindObjectOfType<AudioManager>().Play("eating");
                 eatingSound = true;
             }
+
+            if (bloodTimer <= 0)
+            {
+                CreateBlood();
+                bloodTimer = 1.5f;
+            }
         }
 
         jumpTimer -= Time.deltaTime;
 
         soundTimer -= Time.deltaTime;
+
+        bloodTimer -= Time.deltaTime;
 
     }
 
@@ -142,6 +151,11 @@ public class EnemyMovement : MonoBehaviour
             jumpCounter = 0;
         }
 
+    }
+
+    void CreateBlood()
+    {
+        blood.Play();
     }
 
 }

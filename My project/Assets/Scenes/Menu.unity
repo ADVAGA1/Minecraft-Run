@@ -2061,28 +2061,28 @@ MonoBehaviour:
   sounds:
   - name: Music1
     clip: {fileID: 8300000, guid: b438c4600ff16754e88f8c945749d746, type: 3}
-    volume: 0.7
+    volume: 0.6
     pitch: 1
     loop: 0
     spatialBlend: 0
     source: {fileID: 0}
   - name: Music2
     clip: {fileID: 8300000, guid: 7a4ef14192d591f4da5a831a19327230, type: 3}
-    volume: 0.7
+    volume: 0.6
     pitch: 1
     loop: 0
     spatialBlend: 0
     source: {fileID: 0}
   - name: Music3
     clip: {fileID: 8300000, guid: d5db301854241594d836aab6c2a29149, type: 3}
-    volume: 0.7
+    volume: 0.6
     pitch: 1
     loop: 0
     spatialBlend: 0
     source: {fileID: 0}
   - name: Music4
     clip: {fileID: 8300000, guid: 7e136a7a44b83ce4295a2199db5369ad, type: 3}
-    volume: 0.7
+    volume: 0.6
     pitch: 1
     loop: 0
     spatialBlend: 0

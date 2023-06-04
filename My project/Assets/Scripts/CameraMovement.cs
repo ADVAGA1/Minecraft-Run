@@ -96,6 +96,8 @@ public class CameraMovement : MonoBehaviour
         var currentRotation = transform.rotation;
         transform.rotation = Quaternion.identity;
 
+        velocity = player.GetComponent<PlayerMovement>().velocity * 0.725f;
+
         if(!Shaking(move, mid)) transform.Translate(move.normalized * Time.deltaTime * velocity);
 
         transform.rotation = currentRotation;

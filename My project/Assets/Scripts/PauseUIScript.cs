@@ -18,6 +18,7 @@ public class PauseUIScript : MonoBehaviour
 
         inGameCanvas.SetActive(false);
         pauseCanvas.SetActive(true);
+        FindObjectOfType<AudioManager>().Stop("running");
     }
 
     public void ResumeGame()
@@ -26,6 +27,7 @@ public class PauseUIScript : MonoBehaviour
         pauseCanvas.SetActive(false);
         inGameCanvas.SetActive(true);
         FindObjectOfType<GameManager>().PauseGame(false);
+        FindObjectOfType<AudioManager>().Play("running");
     }
 
     public void ExitGame()
