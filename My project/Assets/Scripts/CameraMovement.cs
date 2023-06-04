@@ -33,7 +33,7 @@ public class CameraMovement : MonoBehaviour
             changed = !changed;
             if (changed)
             {
-                timer = 10;
+                timer = 5;
                 velocity = initialVelocity + 0.2f;
             }
             else

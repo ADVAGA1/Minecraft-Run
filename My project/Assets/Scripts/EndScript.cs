@@ -31,16 +31,19 @@ public class EndScript : MonoBehaviour
 
     public void PlayAgain()
     {
+        FindObjectOfType<AudioManager>().Play("button");
         SceneManager.LoadScene("Juego");
     }
 
     public void Menu()
     {
+        FindObjectOfType<AudioManager>().Play("button");
         SceneManager.LoadScene("Menu");
     }
 
     public void Quit()
     {
+        FindObjectOfType<AudioManager>().Play("button");
         Application.Quit();
     }
 

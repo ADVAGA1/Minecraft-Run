@@ -18,11 +18,13 @@ public class MenuScript : MonoBehaviour
 
     public void PlayClick()
     {
+        FindObjectOfType<AudioManager>().Play("ButtonPressed");
         SceneManager.LoadScene("Juego");
     }
 
     public void HowToPlayClick()
     {
+        FindObjectOfType<AudioManager>().Play("ButtonPressed");
         currentScene = MenuScene.HOWTOPLAY;
         Menu.SetActive(false);
         HowToPlay.SetActive(true);
@@ -31,6 +33,7 @@ public class MenuScript : MonoBehaviour
 
     public void CreditsClick()
     {
+        FindObjectOfType<AudioManager>().Play("ButtonPressed");
         currentScene = MenuScene.CREDITS;
         Credits.SetActive(true);
         Menu.SetActive(false);
@@ -38,6 +41,7 @@ public class MenuScript : MonoBehaviour
 
     public void ExitClick()
     {
+        FindObjectOfType<AudioManager>().Play("ButtonPressed");
         Application.Quit();
     }
 
@@ -45,6 +49,7 @@ public class MenuScript : MonoBehaviour
     {
         if(currentScene == MenuScene.HOWTOPLAY)
         {
+            FindObjectOfType<AudioManager>().Play("ButtonPressed");
             currentScene = MenuScene.MENU;
             HowToPlay.SetActive(false);
             Menu.SetActive(true);
@@ -52,6 +57,7 @@ public class MenuScript : MonoBehaviour
         
         if(currentScene == MenuScene.CREDITS)
         {
+            FindObjectOfType<AudioManager>().Play("ButtonPressed");
             currentScene = MenuScene.MENU;
             Credits.SetActive(false);
             Menu.SetActive(true);

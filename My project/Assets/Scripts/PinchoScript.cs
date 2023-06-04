@@ -43,6 +43,7 @@ public class PinchoScript : MonoBehaviour
         if(!godMode && collision.collider.name == "Player")
         {
             startTimer = true;
+            FindObjectOfType<AudioManager>().Play("button");
         }
     }
 }

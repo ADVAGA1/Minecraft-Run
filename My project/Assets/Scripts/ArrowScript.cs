@@ -11,6 +11,7 @@ public class ArrowScript : MonoBehaviour
     void Start()
     {
         initialPosition = transform.position;
+        FindObjectOfType<AudioManager>().PlayAtPoint("arrow",transform.position);
     }
 
     // Update is called once per frame
@@ -26,6 +27,7 @@ public class ArrowScript : MonoBehaviour
         if (!godMode && other.name == "Player")
         {
             FindObjectOfType<GameManager>().EndGame(Deaths.ARROW);
+            FindObjectOfType<AudioManager>().Play("arrowhit");
         }
 
         Destroy(gameObject);

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class PauseUIScript : MonoBehaviour
 {
@@ -9,6 +10,7 @@ public class PauseUIScript : MonoBehaviour
     public GameObject pauseCanvas;
     public void PauseGame()
     {
+        FindObjectOfType<AudioManager>().Play("button");
         Score score = FindObjectOfType<Score>();
         pauseCanvas.transform.GetChild(1).GetComponent<TMP_Text>().text = score.GetScore().ToString();
         pauseCanvas.transform.GetChild(3).GetComponent<TMP_Text>().text = score.GetHighscore().ToString();
@@ -20,9 +22,24 @@ public class PauseUIScript : MonoBehaviour
 
     public void ResumeGame()
     {
+        FindObjectOfType<AudioManager>().Play("button");
         pauseCanvas.SetActive(false);
         inGameCanvas.SetActive(true);
         FindObjectOfType<GameManager>().PauseGame(false);
+    }
+
+    public void ExitGame()
+    {
+        FindObjectOfType<AudioManager>().Play("button");
+        Application.Quit();
+
+    }
+
+    public void Menu()
+    {
+        FindObjectOfType<AudioManager>().Play("button");
+        FindObjectOfType<GameManager>().PauseGame(false);
+        SceneManager.LoadScene("Menu");
     }
 
 }

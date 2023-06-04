@@ -9,9 +9,9 @@ public class EnemyMovement : MonoBehaviour
     private bool left, changed;
     private Movement currentMovement;
     private Rigidbody myRigidbody;
-    private bool moving;
+    private bool moving, eatingSound;
     private int jumpCounter;
-    private float jumpTimer;
+    private float jumpTimer, soundTimer;
     void Start()
     {
         left = false;
@@ -20,6 +20,8 @@ public class EnemyMovement : MonoBehaviour
         currentMovement = Movement.FORWARD;
         myRigidbody = GetComponent<Rigidbody>();
         jumpCounter = 0;
+        soundTimer = 10;
+        eatingSound = false;
     }
 
     // Update is called once per frame
@@ -82,9 +84,31 @@ public class EnemyMovement : MonoBehaviour
             }
 
             if (ray && hitInfo.collider.name != "Change") changed = false;
+
+            if (soundTimer <= 0 )
+            {
+                if (Random.value >= 0.6f)
+                {
+                    FindObjectOfType<AudioManager>().PlayAtPoint("zombie", transform.position);
+                    soundTimer = 10;
+                }
+                else soundTimer = 2;
+            }
+
+        }
+        else
+        {
+            if (!eatingSound)
+            {
+                FindObjectOfType<AudioManager>().Play("eating");
+                eatingSound = true;
+            }
         }
 
         jumpTimer -= Time.deltaTime;
+
+        soundTimer -= Time.deltaTime;
+
     }
 
     private bool InCenter(Transform collider)

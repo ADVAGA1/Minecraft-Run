@@ -42,6 +42,7 @@ public class DiamanteScript : MonoBehaviour
         if(other.name == "Player")
         {
             score.UpdateScore(score.GetScore() + 1);
+            FindObjectOfType<AudioManager>().Play("item");
             Destroy(gameObject);
         }
     }

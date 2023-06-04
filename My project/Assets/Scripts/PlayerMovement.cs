@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -14,17 +13,21 @@ public class PlayerMovement : MonoBehaviour
     public float jumpingForce;
     private Rigidbody myRigidbody;
     private Animator myAnimator;
+    [HideInInspector]
     public bool isPlaying;
     private bool left, changed;
     private int jumpCounter;
+    [HideInInspector]
     public bool godMode;
-    private bool onFloor, startTimerPincho;
+    private bool onFloor, startTimerPincho, audioPlayed;
     private float timerPincho, fallTimer, jumpTimer;
     private Score score;
     private GameManager gameManager;
     public Movement currentMovement { get; private set; }
 
     private float offsetx, offsetz;
+
+    bool first;
 
     // Start is called before the first frame update
     void Start()
@@ -41,11 +44,15 @@ public class PlayerMovement : MonoBehaviour
         gameManager = FindObjectOfType<GameManager>();
         fallTimer = Constants.FALL_TIMER;
         jumpTimer = 0.2f;
+        first = true;
+        audioPlayed = false;
+
     }
 
     // Update is called once per frame
     void Update()
     {
+
         if (godMode)
         {
             GodModeMovement();
@@ -61,6 +68,21 @@ public class PlayerMovement : MonoBehaviour
             if (godMode) FindObjectOfType<Score>().SetComment("Set gamemode to Creative Mode");
             else FindObjectOfType<Score>().SetComment("Set gamemode to Survival Mode");
 
+        }
+
+        //Chapuza porque al principio me salia el personaje desplazado porque cogia un offset raro
+        first = false;
+
+        if(!audioPlayed && onFloor)
+        {
+            FindObjectOfType<AudioManager>().Play("running");
+            audioPlayed = true;
+        }
+
+        if (!onFloor || !isPlaying)
+        {
+            FindObjectOfType<AudioManager>().Stop("running");
+            audioPlayed = false;
         }
 
 
@@ -87,13 +109,13 @@ public class PlayerMovement : MonoBehaviour
 
         Physics.Raycast(transform.position + Vector3.up, Vector3.down, out RaycastHit hitInfo);
 
-        if(hitInfo.collider == collision.collider) 
-        {
+        //if(hitInfo.collider == collision.collider) 
+        //{
             jumpCounter = 0;
             myAnimator.SetInteger("jumpCounter", jumpCounter);
             onFloor = true;
             myAnimator.SetBool("onFloor", onFloor);
-        }
+        //}
 
     }
 
@@ -101,6 +123,7 @@ public class PlayerMovement : MonoBehaviour
     {
         isPlaying = false;
         myAnimator.SetBool("dead", true);
+        FindObjectOfType<AudioManager>().Play("damage");
 
         transform.Rotate(90, 0, 0);
 
@@ -145,9 +168,13 @@ public class PlayerMovement : MonoBehaviour
 
             bool ray = Physics.Raycast(transform.position + new Vector3(0, 1f, 0), Vector3.down, out RaycastHit hitInfo);
 
-            if (!ray) fallTimer -= Time.deltaTime;
+            if (!ray)
+            {
+                onFloor = false;
+                fallTimer -= Time.deltaTime;
+            }
 
-            if (ray)
+            if (ray && !first)
             {
                 offsetx = hitInfo.collider.transform.position.x - transform.position.x;
                 offsetz = hitInfo.collider.transform.position.z - transform.position.z;
@@ -156,6 +183,7 @@ public class PlayerMovement : MonoBehaviour
             {
                 offsetx = 0; offsetz = 0;
             }
+
 
             if (ray)
             {
@@ -172,6 +200,7 @@ public class PlayerMovement : MonoBehaviour
                         changed = true;
                         FindObjectOfType<CreateLevel>().ChangeBlock(hitInfo.collider.transform);
                         score.UpdateScore(score.GetScore() + 1);
+                        FindObjectOfType<AudioManager>().Play("change");
                     }
                 }
                 else
@@ -186,6 +215,7 @@ public class PlayerMovement : MonoBehaviour
                         myAnimator.SetInteger("jumpCounter", jumpCounter);
                         onFloor = false;
                         myAnimator.SetBool("onFloor", onFloor);
+                        FindObjectOfType<AudioManager>().Play("jump");
 
                     }
                 }
@@ -204,6 +234,7 @@ public class PlayerMovement : MonoBehaviour
                     myAnimator.SetInteger("jumpCounter", jumpCounter);
                     onFloor = false;
                     myAnimator.SetBool("onFloor", onFloor);
+                    FindObjectOfType<AudioManager>().Play("jump");
                 }
 
             }
@@ -235,6 +266,7 @@ public class PlayerMovement : MonoBehaviour
             }
 
         }
+
     }
 
     private void GodModeMovement()
@@ -254,6 +286,7 @@ public class PlayerMovement : MonoBehaviour
 
                 FindObjectOfType<CreateLevel>().ChangeBlock(hitInfo.collider.transform);
                 score.UpdateScore(score.GetScore() + 1);
+                FindObjectOfType<AudioManager>().Play("change");
 
             }
 
@@ -272,6 +305,7 @@ public class PlayerMovement : MonoBehaviour
                 myAnimator.SetInteger("jumpCounter", jumpCounter);
                 onFloor = false;
                 myAnimator.SetBool("onFloor", onFloor);
+                FindObjectOfType<AudioManager>().Play("jump");
 
             }
 
@@ -286,6 +320,7 @@ public class PlayerMovement : MonoBehaviour
                 myAnimator.SetInteger("jumpCounter", jumpCounter);
                 onFloor = false;
                 myAnimator.SetBool("onFloor", onFloor);
+                FindObjectOfType<AudioManager>().Play("jump");
             }
         }
 

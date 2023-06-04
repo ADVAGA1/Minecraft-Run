@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Data;
+using System.Net.Http.Headers;
 using UnityEngine;
 
 [System.Serializable]
@@ -41,6 +42,8 @@ public class CreateLevel : MonoBehaviour
         obj = Instantiate(terrain);
         obj.transform.Translate(0, -175 - depth, 0);
         obj.transform.name = "terrain" + indexTerrain.ToString();
+        indexTerrain++;
+        terrainsSpawned++;
 
         SpawnMap();
     }
@@ -68,7 +71,7 @@ public class CreateLevel : MonoBehaviour
             ++indexTerrain;
         }
 
-        if(terrainsSpawned == 2)
+        if(terrainsSpawned > 2)
         {
             GameObject t = GameObject.Find("terrain" + (indexTerrain - 2).ToString());
             Destroy(t);
@@ -121,7 +124,7 @@ public class CreateLevel : MonoBehaviour
             else height += Constants.blockSize * nPlatforms;
 
             //Diamond spawn
-            if (Random.value >= 0.8)
+            if (Random.value >= 0.75)
             {
                 GameObject diamond = Instantiate(diamonds);
 
@@ -135,7 +138,7 @@ public class CreateLevel : MonoBehaviour
 
 
             //Stair spawn
-            if (i < 14 && Random.value >= 0.6)
+            if (i < 29 && Random.value >= 0.6)
             {
                 GameObject stair = Instantiate(stairs);
                 GameObject block = Instantiate(normalBlock);
@@ -168,7 +171,7 @@ public class CreateLevel : MonoBehaviour
             }
 
             //Tree spawn
-            if (Random.value >= 0.5)
+            if (Random.value >= 0.6)
             {
                 GameObject tree = Instantiate(trees);
 

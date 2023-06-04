@@ -9,7 +9,7 @@ public class SilverfishScript : MonoBehaviour
     private Vector3 initialPosition;
     public float animationSpeed;
     public float animationAmplitude;
-    private float timer;
+    private float timer, soundTimer;
     private bool forward;
     private float oscillateValue;
     private float lastOscillateValue;
@@ -20,7 +20,7 @@ public class SilverfishScript : MonoBehaviour
         initialPosition = transform.position;
         forward = true;
         oscillateValue = oscillate(timer, animationSpeed, animationAmplitude);
-
+        soundTimer = 5;
     }
 
     // Update is called once per frame
@@ -46,6 +46,18 @@ public class SilverfishScript : MonoBehaviour
 
         transform.position = initialPosition + (forward ? 1 : -1) * -1 *transform.forward * oscillateValue;
 
+        if (soundTimer <= 0 && PlayerClose())
+        {
+            if (Random.value >= 0.7f)
+            {
+                FindObjectOfType<AudioManager>().PlayAtPoint("silverfish", transform.position);
+                soundTimer = 5;
+            }
+            else soundTimer = 1;
+        }
+
+        soundTimer -= Time.deltaTime;
+
     }
 
     float oscillate(float time, float speed, float amplitude)
@@ -62,4 +74,13 @@ public class SilverfishScript : MonoBehaviour
             FindObjectOfType<GameManager>().EndGame(Deaths.SILVERFISH);
         }
     }
+
+    private bool PlayerClose()
+    {
+        Vector3 playerPos = FindObjectOfType<PlayerMovement>().transform.position;
+
+        if (Vector3.Distance(playerPos, transform.position) <= 10) return true;
+        return false;
+    }
+
 }
